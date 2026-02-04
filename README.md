@@ -123,7 +123,58 @@ But **managing that treasury is still manual**:
 
 ## Installation & Usage
 
-*(Coming soon - MVP in progress)*
+### Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/jasper9/agent-treasury-manager.git
+cd agent-treasury-manager
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your wallet addresses and private key
+
+# Build
+npm run build
+```
+
+### CLI Commands
+
+```bash
+# Check treasury balances
+npm run cli balance
+
+# Collect fees from Clawnch
+npm run cli collect
+
+# Calculate runway
+npm run cli runway --burn 1000  # Monthly burn rate in USD
+
+# Get comprehensive status
+npm run cli status --burn 1000
+```
+
+### Programmatic Usage
+
+```typescript
+import { ClawnchFeeCollector, TreasuryManager } from 'agent-treasury-manager';
+
+// Collect fees
+const collector = new ClawnchFeeCollector(privateKey);
+await collector.collectAllFees([tokenAddress1, tokenAddress2]);
+
+// Track treasury
+const config = {
+  wallets: { base: '0x...', solana: 'SOL...' },
+  // ... other config
+};
+const treasury = new TreasuryManager(config);
+const status = await treasury.getStatus(monthlyBurnRate);
+console.log(status);
+```
 
 ## Built With
 
