@@ -5,6 +5,14 @@
 
 export { ClawnchFeeCollector } from './collectors/clawnch';
 export { TreasuryManager } from './treasury';
+export { SolprismTreasury } from './integrations/solprism';
+export type {
+  TreasuryActionType,
+  RiskLevel,
+  TreasuryReasoning,
+  AuditedActionResult,
+  SolprismIntegrationConfig,
+} from './integrations/solprism';
 export * from './types';
 
 // Version
