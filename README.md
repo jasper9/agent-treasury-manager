@@ -176,12 +176,45 @@ const status = await treasury.getStatus(monthlyBurnRate);
 console.log(status);
 ```
 
+## SOLPRISM Integration — Auditable Reasoning 🔐
+
+Every treasury action can be wrapped in a **SOLPRISM commit-reveal cycle** so stakeholders
+can verify that the agent's reasoning was locked onchain *before* execution:
+
+```typescript
+import { SolprismTreasury } from './integrations/solprism';
+
+const solprism = new SolprismTreasury({ agentName: 'Skippy Treasury Agent' });
+await solprism.initialize(walletKeypair);
+
+const result = await solprism.auditedRebalance(
+  'SOL allocation drifted to 68%, rebalancing to 50% target',
+  'low',
+  ['Small adjustment', 'High liquidity'],
+  'Portfolio returns to 50/50 SOL/USDC',
+  { totalValueUSD: 15000, positions: { SOL: 0.68, USDC: 0.32 } },
+  async () => treasury.rebalance({ SOL: 0.5, USDC: 0.5 }),
+);
+
+console.log(`Audit proof: ${result.explorerUrl}`);
+```
+
+- 🔒 Reasoning hash committed **before** the action executes
+- 📖 Full reasoning revealed onchain **after** execution
+- ✅ Anyone can verify reasoning wasn't fabricated after the fact
+- 📊 Agent accountability score tracked on SOLPRISM
+
+**Explorer:** https://www.solprism.app/ | **Program ID:** `CZcvoryaQNrtZ3qb3gC1h9opcYpzEP1D9Mu1RVwFQeBu`
+
+See [docs/SOLPRISM-INTEGRATION.md](docs/SOLPRISM-INTEGRATION.md) for full integration guide.
+
 ## Built With
 
 - ⚡ [Solana](https://solana.com) - Fast, cheap transactions
 - 🔄 [Jupiter](https://jup.ag) - Best swap routing
 - 💰 [Morpho Blue](https://morpho.org) - Lending markets
 - 🦞 [Clawnch](https://clawn.ch) - Agent token launches
+- 🔐 [SOLPRISM](https://www.solprism.app/) - Onchain reasoning audit trail
 
 ## License
 
